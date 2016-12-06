@@ -19,7 +19,7 @@ def makeGraph():
     ('D', 'A', {'symbol':0})])
     return G
 
-def split(x, Ca, G):
+def split(P, x, Ca, G):
     acc = []
     rej = []
     newX = dict()
@@ -31,13 +31,25 @@ def split(x, Ca, G):
             else:
                 #li is the node that is pointed to by 'node' on the symbol 'Ca'
                 endPoint = [symb[1] for symb in G.edges([node], data=True) if symb[2]['symbol'] == Ca][0]
-                #set that li belongs to, to see if it is different than the set of what 'node' belongs to
-                setOfEndPoint = x[endPoint]
+                #ELSE: if there exists an edge with that symbol coming out of the current node, then
+                #in the new dictionary, add the set that is pointed to by the node to the value of the node
+                newX[node] = x[endPoint]
 
-                #if the set that the node pointed to by node on the symbol Ca is differnt than the set that node belongs to
-                if (setOfEndPoint != x[node]){
-                    
-                }
+    """
+    newX contains the dictionary of sets that each node points to
+    So, newX is going to be the bases of each partition
+    We need to look through each set and see if ALL the nodes in each set still point to the SAME set using newX
+
+    In other words
+    Loop through the nodes, one set of nodes at a time, and compare their newX values to eachother.
+    Put all the same ones, in a new set, and any different ones that are unique, in their own set. 
+    """
+
+
+
+
+
+
 
 
 
@@ -62,5 +74,5 @@ if __name__ == "__main__":
         W.remove(Ca)
         for each in P:
             print (each)
-            B_v = split(x, Ca, G)
+            B_v = split(P, x, Ca, G)
             print (B_v)
