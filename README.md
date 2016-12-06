@@ -1,2 +1,2 @@
-# SybolicDynamic
+# SymbolicDynamic
 >Hopcroft
