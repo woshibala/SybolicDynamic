@@ -33,7 +33,7 @@ def Hopcroft(DFA, alphabet):
 	W = [] # waiting list
 	for a in alphabet:
 		W.append(('f',a))
-	print W
+	#print W
 
 	while len(W) != 0:
 		
@@ -43,25 +43,47 @@ def Hopcroft(DFA, alphabet):
 
 		
 		for B in P:
-			split = Split(B, C, a, DFA, P)
-			break
-			'''if  split == False:
+			dict0 = Split(B, C, a, DFA, P)
+			split = []
+			for i in dict0:
+				split.append(dict0[i])
+			if len(split) == 0 or len(split) ==  1: # if cannot split
 				continue
-			else:
+			else: # if (C, a) can split B
 				Bp, Bpp = split
+				# replace B by Bp and Bpp in P
 				P.remove(B)
 				P.append(Bp)
 				P.append(Bpp)
 
 			for b in alphabet:
-				if
-		'''
+				flag = False
+
+				# if(B, b) is in W
+				for i in W:
+					if (B, b) == i: # if(B, b) is in W
+						flag = True
+						break
+				if flag:
+					#replace (B, b) by (Bp, b) and (Bpp, b) in W
+					W.remove((B, b))
+					W.append((Bp, b))
+					W.append((Bpp, b))
+				else:
+					if len(Bp) < len(Bpp):
+						W.append((Bp, b))
+					else:
+						W.append((Bpp, b))
+		
+	print("Done!!!")
+	print ("Partition:"),P
+
+
 
 
 
 def Split(B, C, a, DFA, P): # return a dictionary
 
-	print "b", B
 	print "Start split"
 	setDict = {}
 	# pop(): remove and return an arbitrary element from s;
@@ -86,8 +108,7 @@ def Split(B, C, a, DFA, P): # return a dictionary
 						track[node] = sett
 					print "sett", setDict[sett]
 
-	print "Track where node goes on", a
-	#print track
+	#print "Track where node goes on", a, track
 
 	reverse_track = {}
 	for key in track:
@@ -95,19 +116,9 @@ def Split(B, C, a, DFA, P): # return a dictionary
 			reverse_track[track[key]] = set([key])
 		else:
 			reverse_track[track[key]].add(key)
-	print reverse_track
-
-	return reverse_track#for node in B:
-		#track[node]
-
+	#print reverse_track
+	return reverse_track
 		
-
-
-
-
-
-	 
-
 
 def makeGraph():
     G = nx.MultiDiGraph()
@@ -123,8 +134,9 @@ def main():
 	#plt.show()
 	Hopcroft(DFA, alphabet)
 
-alphabet = set([0,1])
+'''alphabet = set([0,1])
 nodes = [1,2,3,4]
 edges = [(1,2,0),(2,3,0),(3,4,0),(4,1,0),(1,1,1),(3,3,1)]
+'''
 main()
 
