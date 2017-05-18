@@ -1,42 +1,35 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import sys
+import random
 
 
 def build_DFA(G,alphabet):
-
 	# add final state
 	G.add_node('f')
-
-	# Construct DFA
+	# construct DFA 
 	for node in G.nodes():
 		out_edges_symbol = set()
 		if node != 'f': # if node is not final state
-
-			for edge in G.edges(node): # add on the symbol to out_edges_symbol
-				# G[edge[0]][edge[1]] = {0: {'symbol': 1}}
-				#print G[edge[0]][edge[1]][0]['symbol']
+			for edge in G.edges(node): # add on the symbols to out_edges_symbol
 				out_edges_symbol.add(G[edge[0]][edge[1]][0]['symbol'])
-
-			new_edges = [] # add edge to final state
+			new_edges = [] # add edges go to final state
 			for symbol in alphabet.difference(out_edges_symbol):
 				new_edges.append((node, 'f' ,{'symbol': symbol}))
-				#print(new_edges)
 			G.add_edges_from(new_edges)
 	return G
 
 def Hopcroft(DFA, alphabet):
 
 	F = set('f')
-	Fc = set(DFA.nodes()).difference(F)
-	P = [Fc,F]
-
-	W = [] # waiting list
+	P = [F,set(DFA.nodes()).difference(F)] # init partition
+	W = [] # init waiting list
+	
 	for a in alphabet:
 		W.append(('f',a))
 
 	while len(W) != 0:
-		print (len(W))
-		# choose and remove
+		# choose and remove from waiting list
 		(C, a) = W[0]
 		W.remove(W[0])
 
@@ -44,7 +37,6 @@ def Hopcroft(DFA, alphabet):
 			# if (C, a) can split B
 			Bp, Bpp = Split(B, C, a, DFA, P)
 			if (len(Bp) == 0 or len(Bpp) == 0):
-				print ('continue')
 				continue
 			# replace B by Bp and Bpp in P
 			P.remove(B)
@@ -61,22 +53,15 @@ def Hopcroft(DFA, alphabet):
 						W.append((Bp, b))
 					else:
 						W.append((Bpp, b))
-
-	print("Done!!!")
-	print ("Partition:"),P
+	return P
+	
 
 def Split(B, C, a, DFA, P): # return a dictionary
+	#print "split"
 	cSet = set()
 	nonSet = set()
 	setDict = {}
-	# pop(): remove and return an arbitrary element from s;
-	"""
-	for item in P:
-		element = item.pop()
-		item.update(element)
-		setDict[element] = item
-	"""
-	#print "dictionary",setDict
+
 	# Track which set it goes
 	track = {}
 	# Check if B split by (C, a)
@@ -84,30 +69,58 @@ def Split(B, C, a, DFA, P): # return a dictionary
 		edge_list = DFA.edges(node, data=True)
 		for edge in edge_list:
 			if (edge[2]['symbol'] == a):
-				if (edge[1] == C):
+				if (edge[1] in C):
 					cSet.add(node)
 				else:
 					nonSet.add(node)
 
 	return nonSet, cSet
 
-
-def makeGraph():
-	G = nx.MultiDiGraph()
-	G.add_edges_from([('A','B',{'symbol': 0}), ('A', 'A', {'symbol':1}),('B', 'C', {'symbol':0}),('C', 'C', {'symbol':1}),('C', 'D', {'symbol':0}),
-	('D', 'A', {'symbol':0})])
-	return G
-
 def main():
-	alphabet = set([0,1])
-	G = makeGraph()
-	DFA = build_DFA(G, alphabet)
-	#nx.draw(G)
-	#plt.show()
-	Hopcroft(DFA, alphabet)
+	
+	f =  sys.argv[1]
+	print "Input file:", f
+	fin = open(f,'r')
+	alphabet = []
+	graph = []
+	for line in fin: 
+		entry = line.split()
+		graph.append((entry[0],entry[1],{'symbol':int(entry[2])}))
+		alphabet.append(int(entry[2]))
+	fin.close()
 
-'''alphabet = set([0,1])
-nodes = [1,2,3,4]
-edges = [(1,2,0),(2,3,0),(3,4,0),(4,1,0),(1,1,1),(3,3,1)]
-'''
+	G = nx.MultiDiGraph()
+	G.add_edges_from(graph)
+
+	alphabet = set(alphabet)
+	print "Alphabet:",alphabet
+
+	DFA = build_DFA(G, alphabet)
+	partition = Hopcroft(DFA, alphabet)
+	partition.remove(set(['f']))
+	print "Partition:", partition
+	fout = open("minimized_" + f, 'w')
+	for p in partition:
+		for q in partition:
+			node1 = random.sample(p, 1)
+			for g in graph:
+				for h in q:
+					if node1[0] == g[0] and h == g[1]:
+						print p, q, g[2]
+						a = p
+						b = q
+						a = list(a)
+						b = list(b)
+						aa = ''
+						bb = ''
+						for i in a:
+							aa = aa + i
+						for i in b:
+							bb = bb + i
+						line = aa + ' ' + bb + ' ' + str(g[2]['symbol']) + '\n'
+						fout.write(line)
+	fout.close()
+
+	
 main()
+#Contact GitHub API Training Shop Blog About
