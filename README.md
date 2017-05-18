@@ -6,7 +6,11 @@ Usage:<br/>
 python mod_hopcroft.py <input file>
 ~~~~
 The input file storage the sofic in such a format:<br/>
-{start node} {end node} {label}<br/><br/>
+~~~~
+<start node> <end node> <label>
+~~~~
+<br/>
+
 
 So for a four-node even shift the input file would look like:<br/>
 ~~~~
