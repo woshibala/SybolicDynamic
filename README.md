@@ -8,17 +8,21 @@ The input file storage the sofic in such a format:<br/>
 {start node} {end node} {label}<br/><br/>
 
 So for a four-node even shift the input file would look like:<br/>
+~~~~
 A B 0<br/>
 B C 0<br/>
 C D 0<br/>
 D A 0<br/>
 A A 1<br/>
 C C 1<br/>
+~~~~
 <br/>
 
-The output file uses the same format. For example, the minimized even shift looks like <br/>
+The output file uses the same format. For example, the minimized even shift looks like: <br/>
+~~~~
 AC AC 1<br/>
 AC BD 0<br/>
 BD AC 0<br/>
+~~~~
 <br/>
 
