@@ -1,6 +1,9 @@
 # Modified Hopcroft algorithm
 > We know that every sofic shift has a right-resolving presentation. In order to learn from sofic shift, it’s necessary to have a minimal presentation for every sofic shift. Because sofic shifts are analogous to DFA, it’s intuitive for us to looking for existed algorithms in the automata theory. DFA minimization is such a task that transforming a given deterministic finite automaton (DFA) into an equivalent DFA that a mini- mum number of states [4]. One algorithm for DFA minimization is Hopcroft’s algorithm, which is based on partition refinement, partitioning the DFA states into groups by their behavior.<br/>
 
+> Update: In version 2, we get rid of the non-sink strongly connected component. Now the algorithm can deal with the "irreducible" sofic shift. "even_shift_with_extra" and "even_shift_with_2extra" are the examples, and both of them can be reduced to the two-node even shift. <br/>
+
+
 Usage:<br/>
 ~~~~
 python mod_hopcroft.py <input file>
