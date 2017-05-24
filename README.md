@@ -5,7 +5,7 @@ Usage:<br/>
 ~~~~
 python mod_hopcroft.py <input file>
 ~~~~
-The input file storage the sofic in such a format, every line represents one edge in the sofic shift.<br/>
+The input file storage the sofic in such a format:<br/>
 ~~~~
 <start node> <end node> <label>
 ~~~~
